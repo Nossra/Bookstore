@@ -12,5 +12,6 @@
   <property name="hibernate.show_sql">true</property>
   <mapping class="com.nosslin.Bookstore.entities.Author"/>
   <mapping class="com.nosslin.Bookstore.entities.Book"/>
+  <mapping class="com.nosslin.Bookstore.entities.User"/>
  </session-factory>
 </hibernate-configuration>

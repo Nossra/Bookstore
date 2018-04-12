@@ -21,7 +21,6 @@ import com.nosslin.Bookstore.dataaccess.author.AuthorDaoHibernateImpl;
 import com.nosslin.Bookstore.entities.Author;
 import com.nosslin.Bookstore.services.author.AuthorService;
 
-import io.netty.handler.codec.http.HttpRequest;
 
 @Path("authors")
 @Produces(MediaType.APPLICATION_JSON)
@@ -61,7 +60,7 @@ public class AuthorController  {
 		dao.saveAuthor(entity);
 		return Response.status(201).entity(entity).build();
 	}
-	
+	 
 	@PUT
 	@Path("{id}")
 	public Response update(@DefaultValue("0") @PathParam("id") int id, Author entity) { //
@@ -78,8 +77,5 @@ public class AuthorController  {
 		Author objectToBeDeleted = dao.findById(id);
 		dao.deleteAuthor(objectToBeDeleted);
 		return Response.status(200).entity(objectToBeDeleted).build();
-	}
-	
-	
-	
+	}	
 }

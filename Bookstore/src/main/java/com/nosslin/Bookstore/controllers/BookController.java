@@ -17,8 +17,10 @@ import javax.ws.rs.core.Response;
 
 import com.nosslin.Bookstore.Container.Container;
 import com.nosslin.Bookstore.ViewModels.BookViewModel;
+import com.nosslin.Bookstore.dataaccess.author.AuthorDaoHibernateImpl;
 import com.nosslin.Bookstore.dataaccess.book.BookDaoHibernateImpl;
 import com.nosslin.Bookstore.entities.Book;
+import com.nosslin.Bookstore.services.author.AuthorService;
 import com.nosslin.Bookstore.services.book.BookService;
 
 @Path("books")
@@ -26,9 +28,11 @@ import com.nosslin.Bookstore.services.book.BookService;
 @Consumes(MediaType.APPLICATION_JSON)
 public class BookController {
 	private BookService dao;
+	private AuthorService authorDao;
 	
 	public BookController() {
 		this.dao = Container.getBookService(new BookDaoHibernateImpl());
+		this.authorDao = Container.getAuthorService(new AuthorDaoHibernateImpl());
 	}
 	 
 	@GET
@@ -41,8 +45,8 @@ public class BookController {
 					books.get(i).getId(), 
 					books.get(i).getTitle(), 
 					books.get(i).getNrOfPages(),
-					"dummyName"
-				//	books.get(i).getAuthor().getFullName() 	//AuthorId
+					(books.get(i).getAuthor() != null) ? books.get(i).getAuthor().getId() : 999,
+					(books.get(i).getAuthor() != null) ? books.get(i).getAuthor().getFullName() : "DUMMY-NAME"
 			));
 		}
 		return Response.ok(avm).build();
@@ -57,20 +61,25 @@ public class BookController {
 				book.getId(), 
 				book.getTitle(), 
 				book.getNrOfPages(), 
-				"dummyName"); //book.getAuthor().getFullName());
+				(book.getAuthor() != null) ? book.getAuthor().getId() : 999,
+				(book.getAuthor() != null) ? book.getAuthor().getFullName() : "DUMMY-NAME"
+			);
 		return Response.ok(avm).build();
 	}
 
 	@POST
-	public Response create(Book entity) {
-		System.out.println("BOOKCONTROLLER POST CALLED");
-		dao.saveBook(entity);
+	public Response create(BookViewModel entity) {
+		Book bookToBeSaved = new Book();
+		bookToBeSaved.setTitle(entity.getTitle());
+		bookToBeSaved.setNrOfPages(entity.getNrOfPages());
+		bookToBeSaved.setAuthor(authorDao.findById(entity.getAuthorId()));
+		dao.saveBook(bookToBeSaved);
 		return Response.status(201).entity(entity).build();
 	}
 	
 	@PUT
 	@Path("{id}")
-	public Response update(@DefaultValue("0") @PathParam("id") int id, Book entity) {
+	public Response update(@DefaultValue("0") @PathParam("id") int id, BookViewModel entity) {
 		System.out.println("BOOKCONTROLLER PUT WAS CALLED");
 		Book objectToBeChanged = dao.findById(id);
 		objectToBeChanged.setTitle(entity.getTitle());
@@ -78,7 +87,6 @@ public class BookController {
 		dao.updateBook(objectToBeChanged);
 		return Response.status(200).entity(entity).build();
 	}
-	
 	
 	@DELETE
 	@Path("{id}")
