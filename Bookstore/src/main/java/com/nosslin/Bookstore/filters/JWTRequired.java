@@ -1,4 +1,4 @@
-package com.nosslin.Bookstore.utilities;
+package com.nosslin.Bookstore.filters;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,6 +10,4 @@ import javax.ws.rs.NameBinding;
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface JWTRequired {
-	
-}
+public @interface JWTRequired {}

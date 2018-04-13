@@ -19,12 +19,14 @@ import com.nosslin.Bookstore.Container.Container;
 import com.nosslin.Bookstore.ViewModels.AuthorViewModel;
 import com.nosslin.Bookstore.dataaccess.author.AuthorDaoHibernateImpl;
 import com.nosslin.Bookstore.entities.Author;
+import com.nosslin.Bookstore.filters.JWTRequired;
 import com.nosslin.Bookstore.services.author.AuthorService;
 
 
 @Path("authors")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@JWTRequired
 public class AuthorController  {
 	
 	
