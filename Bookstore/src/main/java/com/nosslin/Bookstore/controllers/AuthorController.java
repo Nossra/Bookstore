@@ -26,7 +26,6 @@ import com.nosslin.Bookstore.services.author.AuthorService;
 @Path("authors")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@JWTRequired
 public class AuthorController  {
 	
 	
@@ -49,22 +48,23 @@ public class AuthorController  {
 	
 	@GET
 	@Path("/{id}")
+	@JWTRequired
 	public Response getAuthorById(@PathParam("id") int id) {
-		System.out.println("GETAUTHORBYID GOT CALLED");
 		Author a = dao.findById(id);
 		AuthorViewModel avm = new AuthorViewModel(a.getId(), a.getFullName());
 		return Response.ok(avm).build();
 	}
 
 	@POST
+	@JWTRequired
 	public Response create(Author entity) {
-		System.out.println("AUTHORCONTROLLER POST CALLED");
 		dao.saveAuthor(entity);
 		return Response.status(201).entity(entity).build();
 	}
 	 
 	@PUT
 	@Path("{id}")
+	@JWTRequired
 	public Response update(@DefaultValue("0") @PathParam("id") int id, Author entity) { //
 		Author objectToBeChanged = dao.findById(id);
 		objectToBeChanged.setFullName(entity.getFullName());
@@ -74,8 +74,8 @@ public class AuthorController  {
 	
 	@DELETE
 	@Path("{id}")
+	@JWTRequired
 	public Response delete(@DefaultValue("0") @PathParam("id") int id) {
-		System.out.println("AUTHORCONTROLLER DELETE CALLED");
 		Author objectToBeDeleted = dao.findById(id);
 		dao.deleteAuthor(objectToBeDeleted);
 		return Response.status(200).entity(objectToBeDeleted).build();

@@ -1,5 +1,7 @@
 package com.nosslin.Bookstore.services.user;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 
 import com.nosslin.Bookstore.entities.Author;
@@ -11,16 +13,15 @@ public class UserService {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		String HQL_LOGIN = "FROM User WHERE username=:username AND password=:password";
 		
-		@SuppressWarnings("unchecked")
-		User result = (User) session.createQuery(HQL_LOGIN)
-			.setParameter("username", username)
-			.setParameter("password", password)
-			.setMaxResults(1)
-			.getSingleResult();		
-		
-		if (result != null) {
+		try {
+			session.createQuery(HQL_LOGIN)
+				.setParameter("username", username)
+				.setParameter("password", password)
+				.setMaxResults(1)
+				.getSingleResult();	
+			
 			return true;
-		} else {
+		} catch(NoResultException ex) {
 			return false;
 		}
 	}

@@ -27,7 +27,6 @@ import com.nosslin.Bookstore.services.book.BookService;
 @Path("books")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@JWTRequired
 public class BookController {
 	private BookService dao;
 	private AuthorService authorDao;
@@ -56,8 +55,8 @@ public class BookController {
 	
 	@GET
 	@Path("/{id}")
+	@JWTRequired
 	public Response getBookById(@PathParam("id") int id) {
-		System.out.println("GETBOOKBYID GOT CALLED");
 		Book book = dao.findById(id);
 		BookViewModel avm = new BookViewModel(
 				book.getId(), 
@@ -70,6 +69,7 @@ public class BookController {
 	}
 
 	@POST
+	@JWTRequired
 	public Response create(BookViewModel entity) {
 		Book bookToBeSaved = new Book();
 		bookToBeSaved.setTitle(entity.getTitle());
@@ -81,8 +81,8 @@ public class BookController {
 	
 	@PUT
 	@Path("{id}")
+	@JWTRequired
 	public Response update(@DefaultValue("0") @PathParam("id") int id, BookViewModel entity) {
-		System.out.println("BOOKCONTROLLER PUT WAS CALLED");
 		Book objectToBeChanged = dao.findById(id);
 		objectToBeChanged.setTitle(entity.getTitle());
 		objectToBeChanged.setNrOfPages(entity.getNrOfPages());
@@ -92,8 +92,8 @@ public class BookController {
 	
 	@DELETE
 	@Path("{id}")
+	@JWTRequired
 	public Response delete(@DefaultValue("0") @PathParam("id") int id) {
-		System.out.println("BOOKCONTROLLER DELETE CALLED");
 		Book objectToBeDeleted = dao.findById(id);
 		dao.deleteBook(objectToBeDeleted);
 		return Response.status(200).entity(objectToBeDeleted).build();

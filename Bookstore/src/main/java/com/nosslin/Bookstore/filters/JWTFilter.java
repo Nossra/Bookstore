@@ -19,13 +19,13 @@ public class JWTFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		String header = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-		
+		System.out.println("header:" + header);
 		if (header == null || !header.startsWith("Bearer ")) {
 			throw new NotAuthorizedException("Authorization header must be provided");
+		} else {
+			String token = header.substring("Bearer".length()).trim();
+			String user = getUserIfValid(token);
 		}
-		String token = header.substring("Bearer".length()).trim();
-		
-		String user = getUserIfValid(token);
 	}
 	
 	private String getUserIfValid(String token) {

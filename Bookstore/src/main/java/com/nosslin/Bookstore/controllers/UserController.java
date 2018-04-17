@@ -8,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.nosslin.Bookstore.entities.TokenObject;
 import com.nosslin.Bookstore.entities.User;
 import com.nosslin.Bookstore.services.user.UserService;
 import com.nosslin.Bookstore.utilities.TokenIssuer;
@@ -27,13 +29,13 @@ public class UserController {
 	@Path("/{login}")
 	@POST
 	public Response authenticate(User user) {
-		System.out.println(user.getUsername());
 		boolean valid = userService.login(user.getUsername(), user.getPassword());
-		System.out.println(valid);
 		if (valid) {
 			String token = tokenIssuer.issueToken(user.getUsername());
-			return Response.ok(token).build();
+			TokenObject obj = new TokenObject(token);
+			return Response.ok(obj).build();
 		} else {
+			System.out.println("Credentials invalid, try again.");
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 	}
